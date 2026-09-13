@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1117" />
+  <title>Set up your Mac</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="setup.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖱️</text></svg>" />
+</head>
+<body>
+  <main id="setup-app">
+    <div class="setup-header">
+      <h1>Set up your Mac</h1>
+      <p class="hint">Do this once per Mac. It takes about a minute.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-icon">⌨️</div>
+        <div class="step-body">
+          <h2>1. Run the install command</h2>
+          <p>Open <strong>Terminal</strong> on the Mac and paste this:</p>
+          <div class="code-row">
+            <code id="install-cmd">git clone https://github.com/dreddak47/remoteConnector.git &amp;&amp; cd remoteConnector &amp;&amp; ./install.sh</code>
+            <button id="copy-btn" class="icon-btn" title="Copy">⧉</button>
+          </div>
+          <p class="hint">The script builds the helper, installs it to start at login, and walks you through the rest right there in the terminal.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step-icon">🔒</div>
+        <div class="step-body">
+          <h2>2. Grant Accessibility access</h2>
+          <p>The script opens <strong>System Settings → Privacy &amp; Security → Accessibility</strong> for you. Click the lock to unlock, then turn on the toggle next to <em>remoteconnector</em>.</p>
+          <p class="hint">This is what lets the helper move your mouse and type on your behalf — macOS requires it for any app that controls input.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step-icon">🟢</div>
+        <div class="step-body">
+          <h2>3. Look for the menu bar icon</h2>
+          <p>A small <strong>RC</strong> icon appears in your Mac's menu bar (top right). Click it — you'll see a 6-digit code and your Mac's name.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <div class="step-icon">📱</div>
+        <div class="step-body">
+          <h2>4. Pair your phone</h2>
+          <p>On your phone, open the connect page and tap <strong>+</strong> to add a Mac, then enter the code from the menu bar.</p>
+          <a class="primary-btn setup-cta" href="index.html">Go to connect page →</a>
+        </div>
+      </li>
+    </ol>
+  </main>
+
+  <script src="setup.js"></script>
+</body>
+</html>
