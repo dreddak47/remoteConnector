@@ -63,9 +63,17 @@ Click the **RC** menu bar icon — within a few seconds it should show
 
 ## Use it
 
-On your phone (same Wi-Fi as the Mac), open the Vercel URL, enter the code
-shown in the Mac's menu bar, tap Connect. You'll land straight on the control
-app — no token or IP typing.
+On your phone (same Wi-Fi as the Mac), open the Vercel URL. The first time,
+tap **+**, enter the code shown in the Mac's menu bar, and tap Connect — this
+opens the control app in a new tab and remembers the Mac on your phone
+(indefinitely, in `localStorage`). After that, the Mac shows up as a card on
+the home screen with a live online/offline dot; tap it any time it's online
+to reconnect without re-entering a code.
 
-The code rotates every ~4 minutes and each one is valid for 10, so don't
-worry about it going stale mid-setup — just glance at the menu bar again.
+The code only matters for that first pairing — it rotates every ~4 minutes
+and each one is valid for 10, so don't worry about it going stale mid-setup,
+just glance at the menu bar again. Online/offline status for already-paired
+Macs is driven by a separate, stable per-Mac ID that doesn't rotate.
+
+Guided first-time Mac setup (the install command, granting Accessibility,
+etc.) lives at `/setup.html` on the same deployment.

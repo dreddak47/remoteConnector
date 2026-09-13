@@ -64,22 +64,24 @@ func runPairing(cfg Config, state *pairingState, onUpdate func()) {
 }
 
 type registerPayload struct {
-	Code   string `json:"code"`
-	LANIP  string `json:"lanIp"`
-	Port   int    `json:"port"`
-	Token  string `json:"token"`
-	Name   string `json:"name"`
-	TTLSec int    `json:"ttlSeconds"`
+	Code     string `json:"code"`
+	LANIP    string `json:"lanIp"`
+	Port     int    `json:"port"`
+	Token    string `json:"token"`
+	Name     string `json:"name"`
+	DeviceID string `json:"deviceId"`
+	TTLSec   int    `json:"ttlSeconds"`
 }
 
 func register(cfg Config, code, lanIP string) error {
 	payload := registerPayload{
-		Code:   code,
-		LANIP:  lanIP,
-		Port:   cfg.Port,
-		Token:  cfg.Token,
-		Name:   cfg.DeviceName,
-		TTLSec: int(codeTTL.Seconds()),
+		Code:     code,
+		LANIP:    lanIP,
+		Port:     cfg.Port,
+		Token:    cfg.Token,
+		Name:     cfg.DeviceName,
+		DeviceID: cfg.DeviceID,
+		TTLSec:   int(codeTTL.Seconds()),
 	}
 	body, err := json.Marshal(payload)
 	if err != nil {

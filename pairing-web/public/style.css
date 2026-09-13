@@ -1,6 +1,7 @@
 :root {
   --bg: #0f1117;
   --surface: #171a23;
+  --surface-2: #1d2130;
   --border: #2a2f3e;
   --text: #e6e9f0;
   --text-dim: #8b93a7;
@@ -22,17 +23,49 @@ html, body {
 #app {
   max-width: 420px;
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 48px) 20px 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 18px;
+  padding: calc(env(safe-area-inset-top) + 40px) 20px 40px;
 }
 
-h1 {
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.view-header h1 {
   font-size: 22px;
   margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon-btn-spacer {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
 }
 
 .hint {
@@ -40,7 +73,102 @@ h1 {
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
+  text-align: center;
 }
+
+.setup-hint a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* --- Device list --- */
+
+.device-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.device-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: default;
+}
+
+.device-card.online {
+  cursor: pointer;
+}
+
+.device-card.online:active {
+  background: var(--surface-2);
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--text-dim);
+}
+
+.device-card.online .status-dot {
+  background: var(--ok);
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.device-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.device-state {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.device-card.online .device-state {
+  color: var(--ok);
+}
+
+/* --- Empty state --- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 40px;
+}
+
+/* --- Code entry --- */
 
 #code-form {
   display: flex;
@@ -73,7 +201,7 @@ h1 {
   border-color: var(--accent);
 }
 
-button {
+.primary-btn {
   width: 100%;
   height: 50px;
   border: none;
@@ -85,7 +213,7 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
+.primary-btn:disabled {
   background: var(--surface);
   color: var(--text-dim);
   cursor: default;
@@ -94,6 +222,7 @@ button:disabled {
 .msg {
   font-size: 14px;
   margin: 0;
+  text-align: center;
 }
 
 .msg.error { color: var(--danger); }

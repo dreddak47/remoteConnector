@@ -7,12 +7,20 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 // Config holds runtime configuration for the helper.
 type Config struct {
 	Token string
 	Port  int
+
+	// DeviceID is a stable, non-secret identifier for this Mac, generated
+	// once and persisted across restarts/rebuilds. Unlike the rotating
+	// pairing code, it never changes, so the phone can remember "this Mac"
+	// across sessions (localStorage) and poll its online/offline status
+	// without re-entering a code each time.
+	DeviceID string
 
 	// Pairing lets the phone find this Mac via a short code instead of a
 	// LAN IP + token in the URL. PairServerURL points at the small Vercel
@@ -60,7 +68,7 @@ func LoadConfig() (Config, error) {
 		}
 	}
 	if v := os.Getenv("RC_PAIR_SERVER_URL"); v != "" {
-		cfg.PairServerURL = v
+		cfg.PairServerURL = strings.TrimRight(v, "/")
 	}
 	if v := os.Getenv("RC_PAIR_SECRET"); v != "" {
 		cfg.PairSecret = v
@@ -81,6 +89,12 @@ func LoadConfig() (Config, error) {
 	}
 	if cfg.PairSecret == "" {
 		cfg.PairSecret = generateToken()
+		dirty = true
+	}
+	if cfg.DeviceID == "" {
+		// Existing installs (config file predates DeviceID) get one
+		// generated and persisted here, same as PairSecret above.
+		cfg.DeviceID = generateToken()
 		dirty = true
 	}
 	if cfg.DeviceName == "" {
@@ -104,6 +118,7 @@ func (cfg Config) toConfFile() string {
 	s += "PORT=" + strconv.Itoa(cfg.Port) + "\n"
 	s += "PAIR_SECRET=" + cfg.PairSecret + "\n"
 	s += "DEVICE_NAME=" + cfg.DeviceName + "\n"
+	s += "DEVICE_ID=" + cfg.DeviceID + "\n"
 	if cfg.PairServerURL != "" {
 		s += "PAIR_SERVER_URL=" + cfg.PairServerURL + "\n"
 	}
@@ -113,14 +128,16 @@ func (cfg Config) toConfFile() string {
 func parseConfigFile(contents string, cfg *Config) {
 	lines := splitLines(contents)
 	for _, line := range lines {
+		line = strings.TrimSpace(line)
 		if len(line) < 3 {
 			continue
 		}
-		// Support KEY=VALUE.
+		// Support KEY=VALUE, tolerating stray whitespace around either side
+		// (this file gets hand-edited, e.g. to add PAIR_SERVER_URL).
 		for i := 0; i < len(line); i++ {
 			if line[i] == '=' {
-				key := line[:i]
-				val := line[i+1:]
+				key := strings.TrimSpace(line[:i])
+				val := strings.TrimSpace(line[i+1:])
 				switch key {
 				case "TOKEN":
 					if val != "" {
@@ -131,11 +148,13 @@ func parseConfigFile(contents string, cfg *Config) {
 						cfg.Port = p
 					}
 				case "PAIR_SERVER_URL":
-					cfg.PairServerURL = val
+					cfg.PairServerURL = strings.TrimRight(val, "/")
 				case "PAIR_SECRET":
 					cfg.PairSecret = val
 				case "DEVICE_NAME":
 					cfg.DeviceName = val
+				case "DEVICE_ID":
+					cfg.DeviceID = val
 				}
 				break
 			}

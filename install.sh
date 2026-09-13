@@ -12,8 +12,34 @@
 
 set -e
 
+# --- Terminal output helpers ---
+# Colorize only when attached to a real terminal (not when piped/logged), so
+# output degrades gracefully either way.
+if [ -t 1 ]; then
+    BOLD=$(tput bold 2>/dev/null || true)
+    DIM=$(tput dim 2>/dev/null || true)
+    GREEN=$(tput setaf 2 2>/dev/null || true)
+    CYAN=$(tput setaf 6 2>/dev/null || true)
+    RESET=$(tput sgr0 2>/dev/null || true)
+else
+    BOLD=""; DIM=""; GREEN=""; CYAN=""; RESET=""
+fi
+
+step() {
+    # step <n> <total> <title>
+    printf '\n%s[Step %s/%s]%s %s%s%s\n' "$BOLD$CYAN" "$1" "$2" "$RESET" "$BOLD" "$3" "$RESET"
+}
+
+TOTAL_STEPS=4
+
+echo "${BOLD}RemoteConnector setup${RESET}"
+echo "${DIM}This installs the Mac helper, sets it to start at login, and gets you${RESET}"
+echo "${DIM}ready to pair your phone. Four quick steps.${RESET}"
+
 # Resolve the directory this script lives in.
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
+step 1 "$TOTAL_STEPS" "Building the helper"
 
 # --- Locate Go ---
 GO=""
@@ -70,6 +96,8 @@ echo "==> Building the helper binary..."
 
 echo "==> Binary installed at: $BIN"
 
+step 2 "$TOTAL_STEPS" "Installing as a login item"
+
 # --- Sign consistently (avoids re-triggering the TCC Accessibility prompt) ---
 if command -v codesign >/dev/null 2>&1; then
     echo "==> Applying ad-hoc code signature (stable identity for permissions)..."
@@ -108,19 +136,30 @@ echo "    Binary:  $BIN"
 echo "    Logs:    $LOG_DIR/remoteconnector.log"
 echo ""
 
-# --- Prompt for Accessibility permission ---
-echo "==> Opening Accessibility settings so you can grant 'remoteconnector' access..."
+step 3 "$TOTAL_STEPS" "Granting Accessibility access"
+
+echo "Opening System Settings so you can grant 'remoteconnector' access..."
 open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility" 2>/dev/null || true
 
 echo ""
-echo "In the pane that opened, click the lock (bottom-left) to authenticate,"
-echo "then enable the toggle next to 'remoteconnector' (or this terminal app)."
-echo "If prompted for Screen Recording, grant that too."
+echo "  ${BOLD}1.${RESET} Click the lock (bottom-left) to authenticate."
+echo "  ${BOLD}2.${RESET} Enable the toggle next to 'remoteconnector' (or this terminal app)."
+echo "  ${BOLD}3.${RESET} If prompted for Screen Recording, grant that too."
 echo ""
-echo "After granting, restart the helper:"
+echo "${DIM}After granting, restart the helper so it picks up the permission:${RESET}"
 echo "    launchctl kickstart -k gui/$(id -u)/com.aekansh.remoteconnector"
+
+step 4 "$TOTAL_STEPS" "Pairing your phone"
+
+echo "  ${BOLD}1.${RESET} Click the 'RC' icon in your menu bar (top right) to see your"
+echo "     Mac's name and its current 6-digit pairing code."
+echo "  ${BOLD}2.${RESET} On your phone, open the connect page and tap '+' to add this Mac,"
+echo "     then enter that code."
 echo ""
-echo "Your phone URL (find the Mac's LAN IP with: ipconfig getifaddr en0):"
+echo "${DIM}(No pairing site configured? Use the direct LAN URL instead --${RESET}"
+echo "${DIM} find the Mac's IP with: ipconfig getifaddr en0)${RESET}"
 echo "    http://<mac-lan-ip>:8740/?token=$(grep -o 'TOKEN=.*' "$HOME/.remoteconnector.conf" 2>/dev/null | cut -d= -f2)"
 echo ""
-echo "Then on your phone: open that URL in Chrome, tap the menu -> 'Add to Home screen'."
+printf '%s┌──────────────────────────────────────────┐%s\n' "$GREEN" "$RESET"
+printf '%s│%s  ✅ Setup complete                        %s│%s\n' "$GREEN" "$RESET$GREEN" "$RESET"
+printf '%s└──────────────────────────────────────────┘%s\n' "$GREEN" "$RESET"

@@ -5,6 +5,7 @@
   var statusEl = document.getElementById("status");
   var statusLabel = statusEl.querySelector(".label");
   var endBtn = document.getElementById("end-session");
+  var backBtn = document.getElementById("back-btn");
   var btnLeft = document.getElementById("btn-left");
   var btnRight = document.getElementById("btn-right");
   var btnScroll = document.getElementById("btn-scroll");
@@ -220,6 +221,17 @@
     send({ type: "end" });
     if (ws) { try { ws.close(); } catch (e) {} }
   });
+
+  // This page is normally opened via window.open() from the device-list
+  // site, so window.close() is allowed on it. If it was opened directly
+  // (bookmarked, typed URL) there's no opener and window.close() would
+  // silently fail -- hide the button rather than show one that does nothing.
+  if (window.opener) {
+    backBtn.hidden = false;
+    backBtn.addEventListener("click", function () {
+      window.close();
+    });
+  }
 
   // --- Keyboard input ---
 

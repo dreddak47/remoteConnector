@@ -10,22 +10,49 @@
 </head>
 <body>
   <main id="app">
-    <h1>Connect to your Mac</h1>
-    <p class="hint">Open the menu bar app on your Mac to see its 6-digit code, then enter it below. Your phone must be on the same Wi-Fi network as the Mac.</p>
 
-    <form id="code-form" autocomplete="off">
-      <div id="digits" class="digits">
-        <input class="digit" inputmode="numeric" maxlength="1" />
-        <input class="digit" inputmode="numeric" maxlength="1" />
-        <input class="digit" inputmode="numeric" maxlength="1" />
-        <input class="digit" inputmode="numeric" maxlength="1" />
-        <input class="digit" inputmode="numeric" maxlength="1" />
-        <input class="digit" inputmode="numeric" maxlength="1" />
+    <!-- Devices view: remembered Macs, live status, tap to connect -->
+    <section id="view-devices" class="view">
+      <div class="view-header">
+        <h1>Your Devices</h1>
+        <button id="add-btn" class="icon-btn" title="Add a Mac" aria-label="Add a Mac">+</button>
       </div>
-      <button id="connect-btn" type="submit" disabled>Connect</button>
-    </form>
+      <p class="hint">Tap a Mac that's online to connect. Your phone must be on the same Wi-Fi network.</p>
 
-    <p id="msg" class="msg" hidden></p>
+      <ul id="device-list" class="device-list"></ul>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <div class="empty-icon">🖥️</div>
+        <p>No Macs yet.</p>
+        <button id="empty-add-btn" class="primary-btn">Add a Mac</button>
+      </div>
+    </section>
+
+    <!-- Add-device view: 6-digit code entry, shown once per new Mac -->
+    <section id="view-add" class="view" hidden>
+      <div class="view-header">
+        <button id="back-btn" class="icon-btn" title="Back" aria-label="Back">‹</button>
+        <h1>Add a Mac</h1>
+        <span class="icon-btn-spacer"></span>
+      </div>
+      <p class="hint">Open the menu bar app on the Mac you want to add to see its 6-digit code, then enter it below.</p>
+
+      <form id="code-form" autocomplete="off">
+        <div id="digits" class="digits">
+          <input class="digit" inputmode="numeric" maxlength="1" />
+          <input class="digit" inputmode="numeric" maxlength="1" />
+          <input class="digit" inputmode="numeric" maxlength="1" />
+          <input class="digit" inputmode="numeric" maxlength="1" />
+          <input class="digit" inputmode="numeric" maxlength="1" />
+          <input class="digit" inputmode="numeric" maxlength="1" />
+        </div>
+        <button id="connect-btn" type="submit" class="primary-btn" disabled>Connect</button>
+      </form>
+
+      <p id="msg" class="msg" hidden></p>
+      <p class="hint setup-hint">Setting up a new Mac for the first time? <a href="setup.html">Guided setup →</a></p>
+    </section>
+
   </main>
 
   <script src="app.js"></script>
