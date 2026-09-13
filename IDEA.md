@@ -1,0 +1,1 @@
+Idea is basically to connect my desktop with mouse through my phone. There are times, where i get far away from my laptop setup including monitor, like laying back in the bed. and i need to control the mouse, or use keyboard. So i want to build that kind of remote connection.

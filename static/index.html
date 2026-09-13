@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>RemoteControl</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖱️</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div id="status" class="status status-connecting">
+        <span class="dot"></span>
+        <span class="label">Connecting…</span>
+      </div>
+      <button id="end-session" class="top-btn" title="End session" disabled>End</button>
+    </header>
+
+    <main>
+      <!-- Mouse pad surface: move mode OR scroll mode -->
+      <div id="pad" class="pad">
+        <div id="pad-hint" class="pad-hint">Drag to move</div>
+      </div>
+
+      <!-- Button row -->
+      <div id="buttons" class="buttons">
+        <button id="btn-left" class="btn" data-action="left">L-Click</button>
+        <button id="btn-right" class="btn" data-action="right">R-Click</button>
+        <button id="btn-scroll" class="btn toggle" data-action="scroll">Scroll</button>
+        <button id="btn-keyboard" class="btn toggle" data-action="keyboard">⌨️</button>
+      </div>
+
+      <!-- Sensitivity slider -->
+      <div id="sens-row" class="sens-row">
+        <span class="sens-label">Speed</span>
+        <input id="sens-slider" type="range" min="0.5" max="5" step="0.1" value="2.0" />
+        <span id="sens-value" class="sens-value">2.0×</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Hidden focusable input to summon the Android keyboard -->
+  <input id="kb-input" class="kb-input" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" />
+
+  <script src="app.js"></script>
+</body>
+</html>
